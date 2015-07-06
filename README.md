@@ -1,3 +1,3 @@
-# Presentations
+# Talks
 
-Presentations
+Slides for talks
