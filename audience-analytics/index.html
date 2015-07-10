@@ -266,6 +266,9 @@ trait HyperLogLog {
 
 #### Percent of wealthy males in BMW campaign
 ```scala
+val adImpressions: Seq[Audience(ad, site, hll, imp, clk)] = ...
+val segmentImpressions: Seq[Segment(name, hll, imp, clk)] = ...
+
 val bmwCookies = adImpressions
     .filter(_.ad = "bmw_X5")
     .reduce(_ merge _)
@@ -312,11 +315,11 @@ val p = (bmwCookies intersect wealthyMaleCookies) / bmwCookies.count()
 
 ## Extending DataFrames DSL
 
-- ~2x times faster than using RDD[Row] reduce or aggregate
+- easy to manage mutable state inside partition/merge function
 
-- ~5x times faster than reduceByKey, aggregateByKey for RDD[(K, V)]
+- works faster than RDD[Row] transformations
 
-- easy to encapsulate mutable state inside partition/merge function
+- looks like 'native' DataFrame code
 
 ```scala
 case class MergeHLLPartition(child: Expression)
@@ -340,6 +343,43 @@ case class MergeHLL(child: Expression)
 
 def mergeHLL(e: Column): Column = MergeHLL(e.expr)
 ```
+
+---
+
+## Extending DataFrames DSL
+
+### Building complicated structure with DSL
+
+```scala
+val dailyEstimates: RDD[(String, Map[LocalDate, SegmentEstimate])] =
+    segments.groupBy(segment_name).agg(
+      segment_name,
+      mergeDailySegmentEstimates(
+        mkDailySegmentEstimate(      // -- Map[LocalDate, SegmentEstimate]
+          dt,
+          mkSegmentEstimate(         // -- SegmentEstimate(cookieHLL, clickHLL)
+            cookie_hll,
+            click_hll)
+        )
+      )
+    )
+```
+
+- HyperLogLog is a Monoid
+
+- SegmentEstimate is a Monoid
+
+- Map[K, SegmentEstimate] is a Monoid
+
+---
+
+## Extending DataFrames DSL
+
+<br/><br/>
+
+- custom aggregation functions needs to be in org.apache.spark.sql` package
+
+- no guarantee that it will work in next Spark release
 
 ---
 
