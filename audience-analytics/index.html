@@ -377,9 +377,11 @@ val dailyEstimates: RDD[(String, Map[LocalDate, SegmentEstimate])] =
 
 <br/><br/>
 
-- custom aggregation functions needs to be in org.apache.spark.sql` package
+- custom aggregation functions needs to be in `org.apache.spark.sql` package
 
-- no guarantee that it will work in next Spark release
+- no guarantee that it will work in next Spark release`
+
+- `org.apache.spark.sql.catalyst.expressions.Sum` as example
 
 ---
 
@@ -391,11 +393,14 @@ val dailyEstimates: RDD[(String, Map[LocalDate, SegmentEstimate])] =
 
 - serve client requests during business day
 
+- simple Spray Http/Json Api
+
 - 40 Spark worker nodes in Yarn cluster
 
 - 100+ gigabytes cached in memory
 
 - average response time ~2 seconds
+
 
 ---
 
@@ -411,7 +416,31 @@ val dailyEstimates: RDD[(String, Map[LocalDate, SegmentEstimate])] =
 
 - spark.speculation=true
 
-- repartition datasets
+- repartition datasets (4-6 partitions for core)
+
+---
+
+## Other options
+
+#### Hive
+
+- Too slow for interactive API backend
+
+#### Impala
+
+- Requires writing aggregation functions in C++
+
+- Not so sure that 1-2 seconds latency is easy to achieve
+
+#### Druid
+
+- Managing separate Druid cluster
+
+- We have batch oriented process
+
+- Bad support for some of type of queries that we need
+
+- Not clear how get data back from Druid?
 
 ---
 template: inverse
