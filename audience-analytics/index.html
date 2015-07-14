@@ -288,15 +288,51 @@ template: inverse
 
 ## Spark DataFrames
 
+- Inspired by R data.frame and Python/Pandas DataFrame
+
+- Distributed collection of rows organized into named columns
+
+- SchemaRDD in Spark < 1.3.0
+
+### High-Level Operations
+- Selecting required columns
+
+- Filtering
+
+- Joining different data sets
+
+- Aggregation (count, sum, average, etc)
+
+---
+
+## Spark DataFrames
+
+```scala
+    val adImpressions: DataFrame = sqlContext.parquetFile("/aa/audience")
+
+    adImpressions.printSchema()
+    // | -- ad: string (nullable = true)
+    // | -- site: string (nullable = true)
+    // | -- hll: binary (nullable = true)
+    // | -- impressions: long (nullable = true)
+    // | -- clicks: long (nullable = true)
+
+    val segmentImpressions: DataFrame = sqlContext.parquetFile("/aa/segments")
+
+    segmentImpressions.printSchema()
+    // | -- segment: string (nullable = true)
+    // | -- hll: binary (nullable = true)
+    // | -- impressions: long (nullable = true)
+    // | -- clicks: long (nullable = true)
+```
+
+---
+
+## Spark DataFrames
+
 #### Percent of wealthy males in BMW campaign
 
 ```scala
-val adImpressions: DataFrame =
-    sqlContext.parquetFile(...) // [ad, site, hll, impressions, clicks]
-
-val segmentImpressions: DataFrame =
-    sqlContext.parquetFile(...) // [segment, hll, impressions, clicks]
-
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.HLLFunctions._
 
