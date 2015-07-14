@@ -311,19 +311,21 @@ template: inverse
     val adImpressions: DataFrame = sqlContext.parquetFile("/aa/audience")
 
     adImpressions.printSchema()
-    // | -- ad: string (nullable = true)
-    // | -- site: string (nullable = true)
-    // | -- hll: binary (nullable = true)
-    // | -- impressions: long (nullable = true)
-    // | -- clicks: long (nullable = true)
+    // root
+    //   | -- ad: string (nullable = true)
+    //   | -- site: string (nullable = true)
+    //   | -- hll: binary (nullable = true)
+    //   | -- impressions: long (nullable = true)
+    //   | -- clicks: long (nullable = true)
 
     val segmentImpressions: DataFrame = sqlContext.parquetFile("/aa/segments")
 
     segmentImpressions.printSchema()
-    // | -- segment: string (nullable = true)
-    // | -- hll: binary (nullable = true)
-    // | -- impressions: long (nullable = true)
-    // | -- clicks: long (nullable = true)
+    // root
+    //   | -- segment: string (nullable = true)
+    //   | -- hll: binary (nullable = true)
+    //   | -- impressions: long (nullable = true)
+    //   | -- clicks: long (nullable = true)
 ```
 
 ---
