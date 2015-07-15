@@ -389,7 +389,9 @@ def mergeHLL(e: Column): Column = MergeHLL(e.expr)
 ### Building complicated structure with DSL
 
 ```scala
-val dailyEstimates: RDD[(String, Map[LocalDate, SegmentEstimate])] =
+type SegmentName = String
+
+val dailyEstimates: RDD[(SegmentName, Map[LocalDate, SegmentEstimate])] =
     segments.groupBy(segment_name).agg(
       segment_name,
       mergeDailySegmentEstimates(
