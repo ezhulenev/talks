@@ -264,7 +264,7 @@ trait HyperLogLog {
 | Male          | HyperLogLog@85sdg4 | 235468      | 335    |
 | $100k-$150k   | HyperLogLog@35jdg4 | 569473      | 194    |
 
-#### Percent of wealthy males in BMW campaign
+#### Percent of college and high school education in BMW campaign
 ```scala
 val adImpressions: Seq[Audience(ad, site, hll, imp, clk)] = ...
 val segmentImpressions: Seq[Segment(name, hll, imp, clk)] = ...
@@ -273,11 +273,11 @@ val bmwCookies: HyperLogLog = adImpressions
     .filter(_.ad = "bmw_X5")
     .map(_.hll).reduce(_ merge _)
 
-val wealthyMaleCookies: HyperLogLog = segmentImpressions
-    .filter(_.segment in Seq("Male", "$100k-$150k"))
+val educatedCookies: HyperLogLog = segmentImpressions
+    .filter(_.segment in Seq("College", "High School"))
     .map(_.hll).reduce( _ merge _)
 
-val p = (bmwCookies intersect wealthyMaleCookies) / bmwCookies.count()
+val p = (bmwCookies intersect educatedCookies) / bmwCookies.count()
 ```
 
 ---
@@ -332,7 +332,7 @@ template: inverse
 
 ## Spark DataFrames
 
-#### Percent of wealthy males in BMW campaign
+#### Percent of college and high school education in BMW campaign
 
 ```scala
 import org.apache.spark.sql.functions._
@@ -342,11 +342,11 @@ val bmwCookies: HyperLogLog = adImpressions
     .filter(col("ad") === "bmw_X5")
     .select(mergeHll(col("hll")).first() // -- sum(clicks)
 
-val wealthyMaleCookies: HyperLogLog = hllSegments
-    .filter(col("segment") in Seq("Male", "$100k-$150k"))
+val educatedCookies: HyperLogLog = hllSegments
+    .filter(col("segment") in Seq("College", "High School"))
     .select(mergeHll(col("hll")).first()
 
-val p = (bmwCookies intersect wealthyMaleCookies) / bmwCookies.count()
+val p = (bmwCookies intersect educatedCookies) / bmwCookies.count()
 ```
 
 ---
